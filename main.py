@@ -9,18 +9,19 @@ def get_count_of_elements(list):
 
 
 def win_rate():
-    wb = openpyxl.reader.excel.load_workbook(filename='test.xlsx', data_only=True)
+    wb = openpyxl.reader.excel.load_workbook(filename='test1.xlsx', data_only=True)
     projects = []
     projects_win = []
     sheet = wb.worksheets[0]  # Обращение к определенному листу. 0 - это 1-й лист
-    for row in range(2, sheet.max_row + 1):
-        # max_row - проходит до конца значений по столбцу
+    for row in range(3, sheet.max_row + 1):  # max_row - проходит до конца значений по столбцу
         id_project = sheet[row][0].value  # 0,1,2...n - идентификаторы столбцов слева направо
         if id_project is not None:
             projects.append(id_project)
         id_project_win = sheet[row][1].value
         if id_project_win is not None:
             projects_win.append(id_project_win)
+    projects = set(projects)
+    projects_win = set(projects_win)
     count_projects = get_count_of_elements(projects)
     count_projects_win = get_count_of_elements(projects_win)
     if count_projects != 0:
