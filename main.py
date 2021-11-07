@@ -1,6 +1,13 @@
 import openpyxl
 
 
+def get_count_of_elements(list):
+    count = 1
+    for element in list:
+        count += 1
+    return count
+
+
 def win_rate():
     wb = openpyxl.reader.excel.load_workbook(filename='test.xlsx', data_only=True)
     projects = []
@@ -14,8 +21,9 @@ def win_rate():
         id_project_win = sheet[row][1].value
         if id_project_win is not None:
             projects_win.append(id_project_win)
-    print(f'Проекты: {projects}')
-    print(f'Отгруженные проекты: {projects_win}')
+
+    print(f'Проекты: {projects},\nВсего проектов: {get_count_of_elements(projects)}')
+    print(f'Отгруженные проекты: {projects_win},\nВсего выигранных проектов: {get_count_of_elements(projects_win)}')
 
 
 # Press the green button in the gutter to run the script.
