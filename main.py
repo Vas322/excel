@@ -2,8 +2,8 @@ import openpyxl
 
 
 def get_count_of_elements(list):
-    count = 1
-    for element in list:
+    count = 0
+    for i in list:
         count += 1
     return count
 
@@ -21,9 +21,16 @@ def win_rate():
         id_project_win = sheet[row][1].value
         if id_project_win is not None:
             projects_win.append(id_project_win)
-
-    print(f'Проекты: {projects},\nВсего проектов: {get_count_of_elements(projects)}')
-    print(f'Отгруженные проекты: {projects_win},\nВсего выигранных проектов: {get_count_of_elements(projects_win)}')
+    count_projects = get_count_of_elements(projects)
+    count_projects_win = get_count_of_elements(projects_win)
+    if count_projects != 0:
+        projects_win_rate = round(count_projects_win / count_projects * 100, 1)  # round - округление до одного знака
+    else:
+        projects_win_rate = 0
+        print(f'Количество зарегистрированных проектов равно {projects_win_rate}. Проверьте файл!')
+    print(f'Проекты: {projects},\nЗарегистрированных проектов: {count_projects}')
+    print(f'Отгруженные проекты: {projects_win},\nВсего выигранных проектов: {count_projects_win}')
+    print(f'WinRate равен: {projects_win_rate} %')
 
 
 # Press the green button in the gutter to run the script.
