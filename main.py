@@ -1,6 +1,8 @@
+import re
+
 import openpyxl
 
-wb = openpyxl.reader.excel.load_workbook(filename='test.xlsx', data_only=True)
+wb = openpyxl.reader.excel.load_workbook(filename='test1.xlsx', data_only=True)
 count_of_lists = len(wb.sheetnames)  # количество листов в книге
 
 
@@ -19,30 +21,41 @@ def input_lists(msg):
                        f' Введите число от 1 до {count_of_lists}. ')
 
 
+def proj_validation_check(proj_list):
+    """Функция делает проверку на количество символов в ID проекта.Удаляет спец.символы и пробелы"""
+    incorrect_id = []
+    for id_proj in proj_list:
+        val_id = re.sub(r'[^\w\s]', '', str(id_proj))
+        incorrect_id.append(val_id)
+    return incorrect_id
+
+
 def win_rate():
     projects = []
     projects_win = []
-    list_excel = input_lists("Введите номер листа книги Ecxel: ")
+    list_excel = input_lists("Введите номер листа Ecxel, в котором данные о проектах: ")
     sheet = wb.worksheets[list_excel]  # Обращение к определенному листу. 0 - это 1-й лист
-    for row in range(3, sheet.max_row + 1):  # max_row - проходит до конца значений по столбцу
+    for row in range(2, sheet.max_row + 1):  # max_row - проходит до конца значений по столбцу
         id_project = sheet[row][0].value  # 0,1,2...n - идентификаторы столбцов слева направо
         if id_project is not None:
             projects.append(id_project)
         id_project_win = sheet[row][1].value
         if id_project_win is not None:
             projects_win.append(id_project_win)
-    projects = set(projects)
-    projects_win = set(projects_win)
+    projects = proj_validation_check(set(projects))  # удаляем повторы в списке и спецсимволы
+    projects_win = proj_validation_check(set(projects_win))  # удаляем повторы в списке и спецсимволы
     count_projects = get_count_of_elements(projects)
     count_projects_win = get_count_of_elements(projects_win)
     if count_projects != 0:
         projects_win_rate = round(count_projects_win / count_projects * 100, 1)  # round - округление до одного знака
+        print(f'Зарегистрированных проектов: {count_projects}')
+        print(f'Зарегистрированные проекты: {projects}')
+        print(f'Выигранных проектов: {count_projects_win}')
+        print(f'Выигранные проекты: {projects_win}')
+        print(f'WinRate равен: {projects_win_rate} %')
     else:
         projects_win_rate = 0
         return print(f'Количество зарегистрированных проектов равно {projects_win_rate}. Проверьте файл!')
-    print(f'Проекты: {projects},\nЗарегистрированных проектов: {count_projects}')
-    print(f'Отгруженные проекты: {projects_win},\nВсего выигранных проектов: {count_projects_win}')
-    print(f'WinRate равен: {projects_win_rate} %')
 
 
 # Press the green button in the gutter to run the script.
