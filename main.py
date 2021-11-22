@@ -2,15 +2,8 @@ import re
 
 import openpyxl
 
-wb = openpyxl.reader.excel.load_workbook(filename='test1.xlsx', data_only=True)
+wb = openpyxl.reader.excel.load_workbook(filename='test.xlsx', data_only=True)
 count_of_lists = len(wb.sheetnames)  # количество листов в книге
-
-
-def get_count_of_elements(list):
-    count = 0
-    for i in list:
-        count += 1
-    return count
 
 
 def input_lists(msg):
@@ -23,11 +16,11 @@ def input_lists(msg):
 
 def proj_validation_check(proj_list):
     """Функция делает проверку на количество символов в ID проекта.Удаляет спец.символы и пробелы"""
-    incorrect_id = []
+    correct_id = []
     for id_proj in proj_list:
-        val_id = re.sub(r'[^\w\s]', '', str(id_proj))
-        incorrect_id.append(val_id)
-    return incorrect_id
+        val_id = re.sub(r'[^\w]', '', str(id_proj))
+        correct_id.append(val_id.strip())
+    return correct_id
 
 
 def win_rate():
@@ -44,8 +37,8 @@ def win_rate():
             projects_win.append(id_project_win)
     projects = proj_validation_check(set(projects))  # удаляем повторы в списке и спецсимволы
     projects_win = proj_validation_check(set(projects_win))  # удаляем повторы в списке и спецсимволы
-    count_projects = get_count_of_elements(projects)
-    count_projects_win = get_count_of_elements(projects_win)
+    count_projects = len(projects)
+    count_projects_win = len(projects_win)
     if count_projects != 0:
         projects_win_rate = round(count_projects_win / count_projects * 100, 1)  # round - округление до одного знака
         print(f'Зарегистрированных проектов: {count_projects}')
